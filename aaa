@@ -1,0 +1,48 @@
+
+    <div v-if="answers.length == 0 && online == true">
+        <h1 class="title mdc-typography--headline">
+            Hello, ask something to get started
+            <p class="mdc-typography--body2"></p>
+        </h1>
+    </div>
+
+    <div v-if="answers.length == 0 && online == false">
+        <h1 class="title mdc-typography--headline">
+            It looks like you are not connected to the internet, this webpage requires internet connection, to process your requests
+            <p class="mdc-typography--body2"></p>
+        </h1>
+    </div>
+
+    <table v-for="a in answers" class="chat-window">
+        <tr>
+            <td class="bubble">{{a.result.resolvedQuery}}</td>
+        </tr>
+        <tr>
+            <div v-if="a.result.fulfillment.spemessagesech" class="bubble bot">
+                {{a.result.fulfillment.speech}}
+            </div>
+
+            <div v-for="m in a.result.fulfillment.messages">
+                <div v-if="m.type === 2">
+                    {{m.title}}
+                    <div v-for="r in m.replies">
+                        <b-button type="is-link" v-on:click="autosubmit(r)">{{r}}</b-button>
+                    </div>
+                </div>
+
+            </div>
+        </tr>
+    </table>
+
+    <section>
+        <b-field label="">
+            <a v-on:click="microphone(true)"><b-icon icon="microphone"></b-icon></a>
+            <b-input
+                v-model="query"
+                @keyup.native.enter="submit" :placeholder="queryTitle" autofocus
+            >
+            </b-input>
+            <a v-on:click="mute(true)" v-if="muted == false"><b-icon icon="volume-source"></b-icon></a>
+            <a v-on:click="mute(false)" v-else><b-icon icon="volume-off"></b-icon></a>
+        </b-field>
+    </section>
